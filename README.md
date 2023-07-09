@@ -27,7 +27,7 @@ static_assert(packhelp::IsUnique<MyPack>::Value == true);
 ```
 
 Both `IsCombination` and `IsPermutation` take two parameter packs as input, and respectively determine whether the first Pack's types are a valid combination or permutation of the second Pack's types.
-```
+```cpp
 using MyOtherPack1 = packhelp::Pack<double&, int>;
 using MyOtherPack2 = packhelp::Pack<double&, std::string, int>;
 
