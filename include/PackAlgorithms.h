@@ -38,49 +38,154 @@
 #include "Pack.h"
 
 #include <concepts>
+#include <type_traits>
 
 namespace packhelp
 {
-    template<typename P, typename T>
-    struct Has;
+    // ============================ Has ============================
 
-    template<typename T>
-    struct Has<Pack<>, T>
+    template<typename X_t, typename Pack_t>
+    struct Has_t;
+
+    template<typename X_t, typename... List_ts>
+    struct Has_native_t;
+
+    template<typename X_t, typename... List_ts>
+    struct Has_t<X_t, Pack<List_ts...>> : Has_native_t<X_t, List_ts...>
+    {
+    };
+
+    // base case
+    template<typename X_t>
+    struct Has_native_t<X_t>
     {
         static constexpr bool Value = false;
     };
 
-    template<typename T, typename Head, typename... Tail> requires std::same_as<T, Head>
-    struct Has<Pack<Head, Tail...>, T> // no inheritance - value is found.
+    // found case, non-recursive
+    template<typename X_t, typename Head_t, typename... Tail_ts>
+        requires std::same_as<X_t, Head_t>
+    struct Has_native_t<X_t, Head_t, Tail_ts...>
     {
         static constexpr bool Value = true;
     };
 
-    template<typename T, typename Head, typename... Tail> requires (!std::same_as<T, Head>)
-    struct Has<Pack<Head, Tail...>, T> : Has<Pack<Tail...>, T>
+    // recursive case
+    template<typename X_t, typename Head_t, typename... Tail_ts>
+        requires (!std::same_as<X_t, Head_t>)
+    struct Has_native_t<X_t, Head_t, Tail_ts...>
+        : Has_native_t<X_t, Tail_ts...>
     {
     };
 
-    template<typename P, typename T, size_t _Counter = static_cast<size_t>(0)>
-    struct HasAt;
+    // ---------------------- Has - value ----------------------
 
-    template<typename T, size_t _Counter>
-    struct HasAt<Pack<>, T, _Counter>
+    template<typename X_t, typename Pack_t>
+    constexpr bool Has = Has_t<X_t, Pack_t>::Value;
+
+    template<typename X_t, typename... List_ts>
+    constexpr bool Has_native = Has_native_t<X_t, List_ts...>::Value;
+
+    // ============================ Find ============================
+
+    constexpr size_t NotFound = static_cast<size_t>(-1);
+
+    template<typename X_t, typename Pack_t>
+    struct Find_t;
+
+    namespace internal
+    {
+        template<typename X_t, size_t Counter, typename... List_ts>
+        struct _Find_native_t;
+    }
+
+    template<typename X_t, typename... List_ts>
+    using Find_native_t = internal::_Find_native_t<X_t, static_cast<size_t>(0), List_ts...>;
+
+    template<typename X_t, typename... List_ts>
+    struct Find_t<X_t, Pack<List_ts...>> : Find_native_t<X_t, List_ts...>
+    {
+    };
+
+    namespace internal
+    {
+        // base case
+        template<typename X_t, size_t Counter>
+        struct _Find_native_t<X_t, Counter>
+        {
+            static constexpr size_t Value = NotFound;
+        };
+
+        // found case, non-recursive
+        template<typename X_t, size_t Counter, typename Head_t, typename... Tail_ts>
+            requires std::same_as<X_t, Head_t>
+        struct _Find_native_t<X_t, Counter, Head_t, Tail_ts...>
+        {
+            static constexpr size_t Value = Counter;
+        };
+
+        // recursive case
+        template<typename X_t, size_t Counter, typename Head_t, typename... Tail_ts>
+            requires (!std::same_as<X_t, Head_t>)
+        struct _Find_native_t<X_t, Counter, Head_t, Tail_ts...>
+            : _Find_native_t<X_t, Counter + static_cast<size_t>(1), Tail_ts...>
+        {
+        };
+    }
+
+    // ---------------------- Find - value ----------------------
+
+    template<typename X_t, typename Pack_t>
+    constexpr size_t Find = Find_t<X_t, Pack_t>::Value;
+
+    template<typename X_t, typename... List_ts>
+    constexpr size_t Find_native = Find_native_t<X_t, List_ts...>::Value;
+
+    // ============================ Unique ============================
+
+    template<typename Pack_t>
+    struct IsUnique_t;
+
+    template<typename... List_ts>
+    struct IsUnique_native_t;
+
+    template<typename... List_ts>
+    struct IsUnique_t<Pack<List_ts...>> : IsUnique_native_t<List_ts...>
+    {
+    };
+
+    // recursive case
+    template<typename A_t, typename B_t, typename ... Tail_ts>
+    struct IsUnique_native_t<A_t, B_t, Tail_ts...>
+        : IsUnique_native_t<A_t, B_t>, IsUnique_native_t<A_t, Tail_ts...>, IsUnique_native_t<B_t, Tail_ts...>
+    {
+        static constexpr bool Value = 
+            IsUnique_native_t<A_t, B_t>::Value
+            && IsUnique_native_t<A_t, Tail_ts...>::Value
+            && IsUnique_native_t<B_t, Tail_ts...>::Value;
+    };
+
+    // base case 1: not unique
+    template <class A_t, class B_t> requires std::same_as<A_t, B_t>
+    struct IsUnique_native_t<A_t, B_t>
     {
         static constexpr bool Value = false;
     };
 
-    template<typename T, size_t _Counter, typename Head, typename... Tail> requires std::same_as<T, Head>
-    struct HasAt<Pack<Head, Tail...>, T, _Counter> // no inheritance - value is found.
+    // base case 2: unique
+    template <class A_t, class B_t> requires (!std::same_as<A_t, B_t>)
+        struct IsUnique_native_t<A_t, B_t>
     {
-        static constexpr bool Value = true;
-        static constexpr size_t At  = _Counter;
+        static constexpr Value = true;
     };
 
-    template<typename T, size_t _Counter, typename Head, typename... Tail> requires (!std::same_as<T, Head>)
-        struct HasAt<Pack<Head, Tail...>, T, _Counter> : HasAt<Pack<Tail...>, T, _Counter + static_cast<size_t>(1)>
-    {
-    };
+    // ------------------ unique - value ------------------
+
+    template<typename Pack_t>
+    constexpr bool IsUnique = IsUnique_t<Pack_t>::Value;
+
+    template<typename... List_ts>
+    constexpr bool IsUnique_native = IsUnique_native_t<List_ts...>::Value;
 }
 
 #endif // PACKHELPER_PACK_ALGORITHMS_H

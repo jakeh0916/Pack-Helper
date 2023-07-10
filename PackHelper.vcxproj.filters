@@ -18,7 +18,7 @@
     <ClInclude Include="include\Pack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\PackUtils.h">
+    <ClInclude Include="include\PackAlgorithms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -26,5 +26,8 @@
     <ClCompile Include="Sandbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

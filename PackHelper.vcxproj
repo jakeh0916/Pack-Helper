@@ -132,10 +132,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Pack.h" />
-    <ClInclude Include="include\PackUtils.h" />
+    <ClInclude Include="include\PackAlgorithms.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sandbox.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
