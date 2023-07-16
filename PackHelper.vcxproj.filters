@@ -18,12 +18,12 @@
     <ClInclude Include="include\Pack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\PackAlgorithms.h">
+    <ClInclude Include="include\Traits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sandbox.cpp">
+    <ClCompile Include="tests\TestCases.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
