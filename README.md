@@ -22,7 +22,7 @@ constexpr size_t Count = Size<IntegralTypesPack>::Value; // Count == 5.
 Use `Find` to find a type within a pack, or determine that it's absent.
 ```cpp
 constexpr bool IndexA = Find<int, IntegralTypesPack>::Value;  // IndexA == 2.
-constexpr bool IndexB = Find<float, IntegralTypesPack>>Value; // IndexB == NotFound (-1).
+constexpr bool IndexB = Find<float, IntegralTypesPack>::Value; // IndexB == NotFound (-1).
 ```
 
 Use `Unique` to determine if a pack has all unique types.
