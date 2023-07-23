@@ -10,12 +10,12 @@
 // be visualized as a chain of related Pack<...> types as shown below. (For more detail on
 // recursive inheritance, see the implementation of std::tuple.)
 // 
-// ==============================       ========================       =====================
-// | Pack<int, double, char*>   |       | Pack<double, char*>  |       | Pack<char*>       |
-// |----------------------------|       |----------------------|       |-------------------|
-// | Type = int                 |       | Type = double        |       | Type = char*      |
-// | Base = Pack<double, char*> |  -|>  | Base = Pack<char*>   |  -|>  | Base = Pack<>     |
-// ==============================       ========================       =====================
+// ===========================       ======================       ==================       ===========
+// | Pack<short, int, long>  |       | Pack<int, long>    |       | Pack<long>     |       | Pack<>  |
+// |-------------------------|       |--------------------|       |----------------|       |---------|
+// | Type = short            |       | Type = double      |       | Type = long    |       |         |
+// | Base = Pack<int, long>  |  -|>  | Base = Pack<long>  |  -|>  | Base = Pack<>  |  -|>  |         |
+// ===========================       ======================       ==================       ===========
 
 namespace packhelp
 {
