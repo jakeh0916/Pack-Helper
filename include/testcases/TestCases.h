@@ -16,7 +16,7 @@
 #include "../core/Pack.h"
 #include "../core/Traits.h"
 
-#define TestFailureID(Category, Number) "** Test Case Failure ** Failed test case '" Category "' (#" #Number ")"
+#define TestFailureID(Category, Number) "** PackHelper Test Case Failure ** '" Category "' (#" #Number ")"
 #define TestFailureDescription(Description) " (Test Case Description: " Description ")"
 
 namespace packhelp
