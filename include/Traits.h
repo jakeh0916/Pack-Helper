@@ -12,6 +12,7 @@
 // ============================================================================================
 // | Trait  | Signature          | Description                                                |
 // ============================================================================================
+// | IsPack | IsPack<Pack>       | Determines whether the type is a packhelp::Pack.           |
 // | Size   | Size<Pack>         | Gets the size of the Pack.                                 |
 // | At     | At<Index, Pack>    | Retrieves the type at Index in the Pack.                   |
 // | Has    | Has<Type, Pack>    | Determines whether the Pack contains Type.                 |
@@ -33,6 +34,37 @@
 namespace packhelp
 {
     constexpr size_t NotFound = static_cast<size_t>(-1);
+
+    // ========================================================================================
+    // |                                        IsPack                                        |
+    // ========================================================================================
+
+    // @brief Pack helper "IsPack" type trait.
+    // Determines whether the type is a packhelp::Pack.
+    //
+    // @tparam Pack - The pack.
+    // @return Value - Whether the pack parameter was a packhelp::Pack.
+    template<typename Pack>
+    struct IsPack;
+
+    template<typename... PackTypes>
+    struct IsPack<Pack<PackTypes...>>
+    {
+        static constexpr bool Value = true;
+    };
+
+    template<typename Pack>
+    struct IsPack
+    {
+        static constexpr bool Value = false;
+    };
+
+    // @brief Pack helper "IsPack" type trait.
+    // Determines whether the type is a packhelp::Pack.
+    //
+    // @tparam Pack - The pack.
+    template<typename Pack>
+    constexpr bool IsPack_v = IsPack<Pack>::Value;
 
     // ========================================================================================
     // |                                Size (and Size_native)                                |
